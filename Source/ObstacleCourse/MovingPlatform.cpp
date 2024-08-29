@@ -2,9 +2,6 @@
 
 
 #include "MovingPlatform.h"
-#include "GameFramework/Actor.h"
-#include "GameFramework/PlayerController.h"
-#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AMovingPlatform::AMovingPlatform()
@@ -18,24 +15,23 @@ AMovingPlatform::AMovingPlatform()
 void AMovingPlatform::BeginPlay()
 {
 	Super::BeginPlay();
-
-	//FPlatformProcess::Sleep(3.0f);
-    // Get the player pawn for player index 0 (usually the main player)
-    APawn* Pawn = UGameplayStatics::GetPlayerPawn(this, 0);
-
-    if (Pawn)
-    {
-        // Get the location of the player pawn
-        PawnLocation = Pawn->GetActorLocation();
-    }	
-	SetActorLocation(PawnLocation+ActorOffset);
+	StartLocation = GetActorLocation();
+	CurrentLocation = StartLocation;
 }
 
 // Called every frame
 void AMovingPlatform::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-    ActorOffset.X++;
-    SetActorLocation(PawnLocation + ActorOffset);
+	DistanceMoved = FVector::Dist(StartLocation, CurrentLocation);
+	CurrentLocation = CurrentLocation + (PlatformVelocity * DeltaTime);
+	SetActorLocation(CurrentLocation);
+	if (DistanceMoved > TargetDistance)
+	{
+		FVector MoveDirection = PlatformVelocity.GetSafeNormal();
+		StartLocation = StartLocation + MoveDirection * TargetDistance;
+		SetActorLocation(StartLocation);
+		PlatformVelocity = -PlatformVelocity;
+	}
 }
 

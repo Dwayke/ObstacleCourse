@@ -18,17 +18,19 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	FVector PawnLocation;
-
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-
 	UPROPERTY(EditAnywhere)
-	bool IsActive = false;
-
+	FVector CurrentLocation;
+	UPROPERTY(EditAnywhere, Category="Distance")
+	float TargetDistance;
+	UPROPERTY(VisibleAnywhere, Category="Distance")
+	float DistanceMoved;
 	UPROPERTY(EditAnywhere)
-	FVector ActorOffset = FVector(0,0,0);
+	FVector PlatformVelocity;
+
+	FVector StartLocation;
 };
