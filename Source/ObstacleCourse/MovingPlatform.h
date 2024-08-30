@@ -23,14 +23,19 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere)
-	FVector CurrentLocation;
-	UPROPERTY(EditAnywhere, Category="Distance")
+private:
+	
+	UPROPERTY(EditAnywhere, Category="Movement")
 	float TargetDistance;
-	UPROPERTY(VisibleAnywhere, Category="Distance")
-	float DistanceMoved;
-	UPROPERTY(EditAnywhere)
-	FVector PlatformVelocity;
-
+	UPROPERTY(EditAnywhere, Category = "Movement")
+	FVector MovementVelocity;
+	UPROPERTY(EditAnywhere, Category = "Rotation")
+	FRotator RotationVelocity;
 	FVector StartLocation;
+	FVector CurrentLocation;
+
+	void MovePlatform(float DeltaTime);
+	void RotatePlatform(float DeltaTime);
+	bool ShouldPlatformReturn() const;
+	float GetDistanceMoved() const;
 };
